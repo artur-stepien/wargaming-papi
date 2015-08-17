@@ -1,4 +1,4 @@
-# Wargaming Public API
+# Wargaming Public API 1.02
 Basic PHP library handling Wargaming Public API. Uses namespace to get data sources so it is compatible with all sources (WoT, Blitz, WGN, WoWp and also WoWs) and all servers (EU,NA,ASIA,RU,KR). All it needs is application_id that can be obtained here https://eu.wargaming.net/developers/applications/ (for EU).
 
 ##Sample usage##
@@ -24,3 +24,7 @@ try {
 	
 }
 ```
+
+##News##
+###1.02 - 2015-08-17###
+Added new parameter to `API::get()` called $assoc. If this parameter is set to true, function will return associative array instead of object/array of objects.

@@ -2,7 +2,7 @@
 
 /**
  * @package     Wargaming.API
- * @version      1.01
+ * @version     1.02
  * @author      Artur Stępień (artur.stepien@bestproject.pl)
  * @copyright   Copyright (C) 2015 Artur Stępień, All rights reserved.
  * @license     GNU General Public License version 3 or later; see LICENSE.txt
@@ -33,13 +33,14 @@ namespace Wargaming {
 		 * 
 		 * @param   string   $namespace   Namespace of data you want to get(for example wgn/servers/info or wot/account/list )
 		 * @param   array    $options     All the options required for this field to work except application_id and language (for example array('fields'=>'server','game'=>'wot'))
+		 * @param   float    $assoc       If set to true function will return associative array instead of object/array of objects.
 		 */
-		public function get($namespace, Array $options = array()) {
+		public function get($namespace, Array $options = array(), $assoc = false) {
 			$url = 'https://'.$this->server.'/'.$namespace.'/?application_id='.$this->application_id.'&language_id='.$this->language.'&'.http_build_query($options);
 			
 			$buff = file_get_contents($url);
 			
-			$response = json_decode($buff);
+			$response = json_decode($buff, $assoc);
 			
 			// Servers return correct data
 			if( is_object($response) AND $response->status=='ok' ) {
