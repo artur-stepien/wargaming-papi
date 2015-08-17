@@ -109,10 +109,6 @@ namespace Wargaming {
 	CONST LANGUAGE_THAI = 'th';
 	CONST LANGUAGE_VIETNAMESE = 'vi';
 
-	CONST GAME_WOT = 'wot';
-	CONST GAME_BLITZ = 'wotb';
-	CONST GAME_WOWP = 'wowp';
-
 	CONST SERVER_EU = 'api.worldoftanks.eu';
 	CONST SERVER_NA = 'api.worldoftanks.com';
 	CONST SERVER_RU = 'api.worldoftanks.ru';
