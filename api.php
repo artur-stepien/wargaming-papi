@@ -39,7 +39,7 @@ namespace Wargaming {
 			
 			// Build query url
 			$url = 'https://'.$this->server.'/'.$namespace.'/?application_id='.$this->application_id.'&language='.$this->language.'&'.http_build_query($options);
-			
+
 			// Get response
 			$buff = file_get_contents($url);
 			
@@ -100,7 +100,6 @@ namespace Wargaming {
 
 				}
 			}
-			
 
 			return false;
 		}
@@ -159,7 +158,6 @@ namespace Wargaming {
 		}
 		
 	}
-	
 	
 	// Supported language codes (used mostly in Tankpedia queries)
 	CONST LANGUAGE_ENGLISH = 'en';
