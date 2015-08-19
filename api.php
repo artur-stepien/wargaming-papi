@@ -2,7 +2,7 @@
 
 /**
  * @package     Wargaming.API
- * @version     1.03
+ * @version     1.04
  * @author      Artur Stępień (artur.stepien@bestproject.pl)
  * @copyright   Copyright (C) 2015 Artur Stępień, All rights reserved.
  * @license     GNU General Public License version 3 or later; see LICENSE.txt
@@ -113,25 +113,27 @@ namespace Wargaming {
 		 * @return string
 		 */
 		protected function translateError($error, $namespace = null) {
+			
+			die($error);
 			$messages = array(
-			   'SEARCH_NOT_SPECIFIED' => 'Parameter <b>bsearch</b> not specified.',
+			   'SEARCH_NOT_SPECIFIED' => 'Parameter <b>search</b> not specified.',
 			   'NOT_ENOUGH_SEARCH_LENGTH' => '<b>Search</b> parameter is not long enough. Minimum length: 3 characters.',
 			   'ACCOUNT_ID_LIST_LIMIT_EXCEEDED' => 'Limit of passed-in <b>account_id</b> IDs exceeded. Maximum: 100.',
 			   'METHOD_NOT_FOUND' => 'Invalid API method <b>'.$namespace.'</b>.',
 			   'METHOD_DISABLED' => 'Specified method is disabled.',
 			   'APPLICATION_IS_BLOCKED' => 'Application is blocked by the administration.',
-			   'INVALID_APPLICATION_ID' => 'Invalid application_id.',
+			   'INVALID_APPLICATION_ID' => 'Invalid <b>application_id</b>.',
 			   'INVALID_IP_ADDRESS' => 'Invalid IP-address for the server application.',
 			   'REQUEST_LIMIT_EXCEEDED' => 'Request limit is exceeded.',
 			   'SOURCE_NOT_AVAILABLE' => 'Data source is not available.',
-			   'INVALID_FIELDS' => 'Invalid field/fields specified in <b>fields</b> parameter.',
+			   'INVALID_FIELDS' => 'Invalid fields specified in <b>fields</b> parameter.',
 			   'AUTH_CANCEL' => 'Application authorization cancelled by user.',
 			   'AUTH_EXPIRED' => 'User authorization timed out.',
 			   'AUTH_ERROR' => 'Authentication error.',
 			   'MEMBER_ID_LIST_LIMIT_EXCEEDED' => 'Limit of passed-in <b>member_id</b> IDs exceeded. Maximum: 100.',
 			   'CLAN_ID_LIST_LIMIT_EXCEEDED' => 'Limit of passed-in <b>clan_id</b> IDs exceeded. Maximum: 100.',
 			   'INCOMPATIBLE_MODULE_IDS' => 'Specified modules are incompatible in a single configuration.',
-			   'ACCOUNT_ID_NOT_SPECIFIED' => 'Required parameter <b>clan_id</b> was not specified.',
+			   'ACCOUNT_ID_NOT_SPECIFIED' => 'Required parameter <b>account_id</b> was not specified.',
 			   'TYPE_NOT_SPECIFIED' => 'Required parameter <b>type</b> was not specified.',
 			   'INVALID_TYPE' => 'Invalid value set in <b>type</b> parameter.',
 			   'RATINGS_NOT_FOUND' => 'No rating details for specified date.',
