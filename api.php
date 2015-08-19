@@ -114,7 +114,6 @@ namespace Wargaming {
 		 */
 		protected function translateError($error, $namespace = null) {
 			
-			die($error);
 			$messages = array(
 			   'SEARCH_NOT_SPECIFIED' => 'Parameter <b>search</b> not specified.',
 			   'NOT_ENOUGH_SEARCH_LENGTH' => '<b>Search</b> parameter is not long enough. Minimum length: 3 characters.',
