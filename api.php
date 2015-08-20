@@ -2,7 +2,7 @@
 
 /**
  * @package     Wargaming.API
- * @version     1.04
+ * @version     1.1
  * @author      Artur Stępień (artur.stepien@bestproject.pl)
  * @copyright   Copyright (C) 2015 Artur Stępień, All rights reserved.
  * @license     GNU General Public License version 3 or later; see LICENSE.txt
@@ -11,9 +11,32 @@
 namespace Wargaming {
 	
 	class API {
+		/**
+		 * Application ID from Wargaming Developer Room
+		 * @var   Integer 
+		 */
 		protected $application_id;
+		
+		/**
+		 * Language for data retrieved from Wargaming servers (language code). 
+		 * 
+		 * @var   String
+		 */
 		protected $language;
+		
+		/**
+		 * API server URL. This one depends on server you use. 
+		 * 
+		 * @var   String
+		 */
 		protected $server;
+		
+		/**
+		 * CURL connection handle
+		 * 
+		 * @var   
+		 */
+		protected $connection = null;
 
 		/**
 		 * Create Wargaming API instance
@@ -41,7 +64,7 @@ namespace Wargaming {
 			$url = 'https://'.$this->server.'/'.$namespace.'/?application_id='.$this->application_id.'&language='.$this->language.'&'.http_build_query($options);
 
 			// Get response
-			$buff = file_get_contents($url);
+			$buff = $this->getUrlContents($url);
 			
 			// Wrong response (probably wrong server URL)
 			if( $buff === false ) {
@@ -102,6 +125,32 @@ namespace Wargaming {
 			}
 
 			return false;
+		}
+		
+		/**
+		 * Returns data from url provided in $url. This function use same curl handle for each request
+		 * 
+		 * @param   String   $url   Data url to process
+		 * 
+		 * @return   mixed   String if success, FALSE on failure
+		 */
+		protected function getUrlContents($url) {
+			
+			// Connection needs to be created
+			if( !is_resource($this->connection) ) {
+				
+				// Initialise connection
+				$this->connection = curl_init();
+				
+				// Make curl return response instead of printing it
+				curl_setopt($this->connection, CURLOPT_RETURNTRANSFER, true);
+			}
+			
+			// Set connection URL
+			curl_setopt($this->connection, CURLOPT_URL, $url);
+			
+			// Return response
+			return curl_exec ($this->connection);
 		}
 		
 		/**

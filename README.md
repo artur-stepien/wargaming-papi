@@ -1,4 +1,4 @@
-# Wargaming Public API 1.04
+# Wargaming Public API 1.1
 Basic PHP library handling Wargaming Public API. Uses namespace to get data sources so it is compatible with all sources (WoT, Blitz, WGN, WoWp and also WoWs) and all servers (EU,NA,ASIA,RU,KR). All it needs is application_id that can be obtained here https://eu.wargaming.net/developers/applications/ (for EU).
 
 ##Sample usage##
@@ -26,6 +26,9 @@ try {
 ```
 
 ##News##
+###1.1 - 2015-08-20###
+Moved to CURL for requests. Speed boost shoold be from 50% - 150% cause of reusing connection. Checked on my WN8 calculation class. Regular calculation takes 0.32s
+
 ###1.04 - 2015-08-19###
 Fixed few error messages.
 
