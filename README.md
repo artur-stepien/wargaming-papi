@@ -76,7 +76,7 @@ try {
 
 ##News##
 ###1.2 - 2016-02-06###
-From now if CURL return an error class will throw exception with that error message. Also added support for ETag ([Documentation](https://eu.wargaming.net/developers/documentation/guide/getting-started/#etag) and HTTP headers.
+From now if CURL return an error class will throw exception with that error message. Also added support for ETag ([Documentation](https://eu.wargaming.net/developers/documentation/guide/getting-started/#etag)) and HTTP headers.
 
 ###1.1 - 2015-08-20###
 Moved to CURL for requests. Speed boost shoold be from 50% - 150% cause of reusing connection. Checked on my WN8 calculation class. Regular calculation takes 0.32s
