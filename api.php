@@ -2,7 +2,7 @@
 
 /**
  * @package     Wargaming.API
- * @version     1.1
+ * @version     1.2
  * @author      Artur Stępień (artur.stepien@bestproject.pl)
  * @copyright   Copyright (C) 2015 Artur Stępień, All rights reserved.
  * @license     GNU General Public License version 3 or later; see LICENSE.txt
@@ -11,6 +11,7 @@
 namespace Wargaming {
 	
 	class API {
+		
 		/**
 		 * Application ID from Wargaming Developer Room
 		 * @var   Integer 
@@ -46,9 +47,11 @@ namespace Wargaming {
 		 * @param   string   $server           Server/Cluster that should be used as source. DefaultL SERVER_EU
 		 */
 		public function __construct($application_id, $language = LANGUAGE_ENGLISH, $server = SERVER_EU) {
+			
 			$this->application_id = $application_id;
 			$this->language = $language;
 			$this->server = $server;
+			
 		}
 
 		/**
@@ -56,23 +59,45 @@ namespace Wargaming {
 		 * 
 		 * @param   string   $namespace   Namespace of data you want to get(for example wgn/servers/info or wot/account/list )
 		 * @param   array    $options     All the options required for this field to work except application_id and language (for example array('fields'=>'server','game'=>'wot'))
-		 * @param   float    $assoc       If set to true function will return associative array instead of object/array of objects.
+		 * @param   boolean  $assoc       If set to true function will return associative array instead of object/array of objects.
+		 * @param	string   $ETag        ETag string to validate data (without quotation marks). If in response server will return HTTP 304 Not Modified status method will return boolean TRUE. That means that data did not changed. Documentation: https://eu.wargaming.net/developers/documentation/guide/getting-started/#etag
+		 * @param	boolean  $HTTPHeaders If this parameter is set to TRUE, method will return also HTTP headers sent with response in format: array('headers'=>array(), 'data'=>array()).
+		 * 
+		 * @return  mixed
 		 */
-		public function get($namespace, Array $options = array(), $assoc = false) {
+		public function get($namespace, Array $options = array(), $assoc = false, $ETag = null, $HTTPHeaders = false) {
 			
 			// Build query url
 			$url = 'https://'.$this->server.'/'.$namespace.'/?application_id='.$this->application_id.'&language='.$this->language.'&'.http_build_query($options);
-
+			
 			// Get response
-			$buff = $this->getUrlContents($url);
+			$buff = $this->getUrlContents($url, $ETag, $HTTPHeaders);
 			
 			// Wrong response (probably wrong server URL)
-			if( $buff === false ) {
+			if( $buff['data'] === false  ) {
+				
 				throw new \Exception('Wrong server or namespace.', 404);
+				
+			// Data did not changed on server
+			} else if( $buff['data'] === true ) {
+			
+				// If HTTPHeaders parameter is set, return assocative array containing data and headers
+				if( $HTTPHeaders ) {
+
+					return $buff;
+
+				// Return plain data
+				} else {
+
+					return $buff['data'];
+
+				}
+				
+			// New data available
 			} else {
 				
 				// Convert response to object or array depending on $assoc param
-				$response = json_decode($buff, $assoc);
+				$response = json_decode($buff['data'], $assoc);
 
 				// User chose object format
 				if( is_object($response) ) {
@@ -80,7 +105,17 @@ namespace Wargaming {
 					// Servers return correct data
 					if( $response->status=='ok') {
 
-						return $response->data;
+						// If HTTPHeaders parameter is set, return assocative array containing also headers
+						if( $HTTPHeaders ) {
+							
+							return array('data'=>$response->data, 'headers'=>$buff['headers']);
+							
+						// Return plain data
+						} else {
+							
+							return $response->data;
+							
+						}
 
 					// Api server return error
 					} elseif( $response->status=='error' ) {
@@ -96,12 +131,22 @@ namespace Wargaming {
 					}
 
 				// User chose array format
-				} elseif( is_array($response) ) {
+				} elseif ( is_array($response) ) {
 
 					// Servers return correct data
 					if( $response['status']=='ok') {
 
-						return $response['data'];
+						// If HTTPHeaders parameter is set, return assocative array containing also headers
+						if( $HTTPHeaders ) {
+							
+							return array('data'=>$response['data'], 'headers'=>$buff['headers']);
+							
+						// Return plain data
+						} else {
+							
+							return $response['data'];
+							
+						}
 
 					// Api server return error
 					} elseif( $response['status']=='error' ) {
@@ -125,32 +170,105 @@ namespace Wargaming {
 			}
 
 			return false;
+			
 		}
 		
 		/**
 		 * Returns data from url provided in $url. This function use same curl handle for each request
 		 * 
 		 * @param   String   $url   Data url to process
+		 * @param   String   $ETag  ETag HTTP header value (without quotation marks) to be used for request.
+		 * @param	boolean  $HTTPHeaders If this parameter is set to TRUE, method will return also HTTP headers sent with response in format: array('headers'=>array(), 'data'=>'').
 		 * 
-		 * @return   mixed   String if success, FALSE on failure
+		 * @return   mixed   Array if success, FALSE on failure, TRUE if data did not changed (only when ETag is used).
 		 */
-		protected function getUrlContents($url) {
+		protected function getUrlContents($url, $ETag = null, $HTTPHeaders = false) {
 			
 			// Connection needs to be created
-			if( !is_resource($this->connection) ) {
+			if ( !is_resource($this->connection) ) {
 				
 				// Initialise connection
 				$this->connection = curl_init();
 				
 				// Make curl return response instead of printing it
 				curl_setopt($this->connection, CURLOPT_RETURNTRANSFER, true);
+				curl_setopt($this->connection, CURLOPT_SSL_VERIFYPEER, false);
+				if( $HTTPHeaders ) {
+					curl_setopt($this->connection, CURLOPT_HEADER, true);
+				}
+			}
+			
+			// User provided ETag so use it
+			if( !is_null($ETag) ) {
+
+				curl_setopt($this->connection, CURLOPT_HTTPHEADER, array(
+					'If-None-Match: "'.$ETag.'"',
+				));
+				
 			}
 			
 			// Set connection URL
 			curl_setopt($this->connection, CURLOPT_URL, $url);
 			
-			// Return response
-			return curl_exec ($this->connection);
+			// Get response
+			$buffer = curl_exec($this->connection);
+			
+			// Check if curl did not return erro
+			$error = curl_error($this->connection);
+			
+			if( $error!=='' ) {
+				
+				throw new \Exception('(Curl) '.$error, curl_errno($this->connection));
+				
+			}
+			
+			// Prepare headers
+			if( $HTTPHeaders ) {
+				
+				// Split response headers and response body
+				list($headers, $body) = explode("\r\n\r\n", $buffer, 2);
+			
+				// Process headers
+				$headers = explode("\r\n", $headers);
+
+				$tmp = array();
+				foreach($headers AS $header) {
+
+					$row = explode(': ', $header, 2);
+					if( count($row)==1 ) {
+						
+						$tmp[$row[0]] = '';
+						
+					} else {
+						
+						$tmp[$row[0]] = $row[1];
+						
+					}
+
+				}
+
+				// Set formatted headers
+				$headers = $tmp;
+				
+			} else {
+				
+				$headers = array();
+				$body = $buffer;
+				
+			}
+
+			// Get response status code
+			$status_code = curl_getinfo($this->connection, CURLINFO_HTTP_CODE);
+			
+			// If data did not changed, return TRUE
+			if( $status_code==304 ) {
+				
+				$body = true;
+				
+			}
+			
+			return array('headers'=>$headers, 'data'=>$body);
+			
 		}
 		
 		/**
@@ -193,17 +311,29 @@ namespace Wargaming {
 			);
 					 
 			if( isset($messages[$error]) ) {
+				
 				return $messages[$error];
+				
 			} elseif( stripos($error, '_NOT_SPECIFIED') ) {
+				
 				return 'Required field <b>'.strtolower(str_ireplace('_NOT_SPECIFIED', '', $error)).'</b> is not specified.';
+				
 			} elseif( stripos($error, '_NOT_FOUND') ) {
+				
 				return 'Data for <b>'.strtolower(str_ireplace('_NOT_FOUND', '', $error)).'</b> not found.';
+				
 			} elseif( stripos($error, '_LIST_LIMIT_EXCEEDED') ) {
+				
 				return 'Limit of passed-in identifiers in the <b>'.strtolower(str_ireplace('_LIST_LIMIT_EXCEEDED', '', $error)).'</b> exceeded.';
+			
 			} elseif( stripos($error, 'INVALID_') ) {
+				
 				return 'Specified field value <b>'.strtolower(str_ireplace('INVALID_', '', $error)).'</b> is not valid.';
+				
 			} else {
+				
 				return $error;
+				
 			}
 		}
 		
