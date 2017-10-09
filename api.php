@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Wargaming.API
- * @version     1.2
+ * @version     1.3
  * @author      Artur Stępień (artur.stepien@bestproject.pl)
  * @copyright   Copyright (C) 2015 Artur Stępień, All rights reserved.
  * @license     GNU General Public License version 3 or later; see LICENSE.txt
