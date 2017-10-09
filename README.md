@@ -1,7 +1,7 @@
 # Wargaming Public API 1.2
 Basic PHP library handling Wargaming Public API. Uses namespace to get data sources so it is compatible with all sources (WoT, Blitz, WGN, WoWp and also WoWs) and all servers (EU,NA,ASIA,RU,KR). All it needs is application_id that can be obtained here https://eu.wargaming.net/developers/applications/ (for EU).
 
-##Sample usage##
+## Sample usage
 ``` php
 <?php
 
@@ -25,7 +25,7 @@ try {
 }
 ```
 
-##Sample ETag usage##
+## Sample ETag usage
 ``` php
 <?php
 
@@ -49,7 +49,7 @@ try {
 }
 ```
 
-##How to get ETag from API request##
+## How to get ETag from API request
 ``` php
 <?php
 
@@ -74,18 +74,18 @@ try {
 }
 ```
 
-##News##
-###1.2 - 2016-02-06###
+## News
+### 1.2 - 2016-02-06
 From now if CURL return an error class will throw exception with that error message. Also added support for ETag ([Documentation](https://eu.wargaming.net/developers/documentation/guide/getting-started/#etag)) and HTTP headers.
 
-###1.1 - 2015-08-20###
+### 1.1 - 2015-08-20
 Moved to CURL for requests. Speed boost shoold be from 50% - 150% cause of reusing connection. Checked on my WN8 calculation class. Regular calculation takes 0.32s
 
-###1.04 - 2015-08-19###
+### 1.04 - 2015-08-19
 Fixed few error messages.
 
-###1.03 - 2015-08-17###
+### 1.03 - 2015-08-17
 Fixed error handling for associative arrays, added new error messages.
 
-###1.02 - 2015-08-17###
+### 1.02 - 2015-08-17
 Added new parameter to `API::get()` called $assoc. If this parameter is set to true, function will return associative array instead of object/array of objects.
