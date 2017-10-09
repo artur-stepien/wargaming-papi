@@ -17,7 +17,7 @@ $api = new Wargaming\API('demo');
 
 // Test how it works
 try {
-	$data = $api->get('wgn/clans/list',array('search'=>'PSQD'));
+	$data = $api->get('wgn/clans/list', ['search'=>'PSQD']);
 	
 	// Display info about WoT Clan PSQD
 	var_dump($data);
@@ -42,7 +42,7 @@ $api = new Wargaming\API('demo');
 // Test how it works
 try {
 	// As a 4th param provide ETag. If tag of a clan S3AL wasn't changed method will return true. If it changed new data will be returned.
-	$info = $api->get('wgn/clans/info', array('clan_id'=>'500034335','fields'=>'tag'), false, '813ac115749538da9b3b61fd4069fd44');
+	$info = $api->get('wgn/clans/info', ['clan_id'=>'500034335','fields'=>'tag'], false, '813ac115749538da9b3b61fd4069fd44');
 	
 	var_dump($info);die;
 	
@@ -65,8 +65,8 @@ $api = new Wargaming\API('demo');
 
 // Test how it works
 try {
-	// Set 5th param to boolean TRUE. That way method will return array with following format: array('headers'=>array(),'data'=>StdClass)
-	$info = $api->get('wgn/clans/info', array('clan_id'=>'500034335','fields'=>'tag'), false, null, true);
+	// Set 5th param to boolean TRUE. That way method will return array with following format: ['headers'=>[],'data'=>StdClass]
+	$info = $api->get('wgn/clans/info', ['clan_id'=>'500034335','fields'=>'tag'], false, null, true);
 
 	// Get response headers. Remember to store ETag without quotes cause $api->get() method add those when ETag is provided.
 	var_dump($info['headers']['ETag']);die;
