@@ -79,6 +79,9 @@ try {
 ```
 
 ## News
+### 1.3 - 2017-10-09
+Moving to PHP7, changing code to PSR.
+
 ### 1.2 - 2016-02-06
 From now if CURL return an error class will throw exception with that error message. Also added support for ETag ([Documentation](https://eu.wargaming.net/developers/documentation/guide/getting-started/#etag)) and HTTP headers.
 
