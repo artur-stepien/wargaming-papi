@@ -4,7 +4,7 @@
     "keywords": ["wargaming", "wg", "wot","world of tanks"],
     "homepage": "https://github.com/artur-stepien/wargaming-papi",
     "type": "library",
-    "license": "GNU",
+    "license": "GPL-3.0-or-later",
     "authors": [
         {
             "name": "Artur Stępień",
