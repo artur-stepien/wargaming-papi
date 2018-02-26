@@ -79,6 +79,9 @@ try {
 ```
 
 ## News
+### 1.3.1 - 2018-02-26
+Creating composer package.
+
 ### 1.3 - 2017-10-09
 Moving to PHP7, changing code to PSR.
 

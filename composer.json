@@ -7,16 +7,15 @@
     "license": "GNU 3.0",
     "authors": [
         {
-            "name": "Jordi Boggiano",
-            "email": "j.boggiano@seld.be",
-            "homepage": "http://seld.be"
+            "name": "Artur Stępień",
+            "email": "artur.stepien@bestproject.pl",
+            "homepage": "http://www.bestproject.pl"
         }
     ],
     "require-dev": {},
     "require": {
         "php": ">=7.0.0"
     },
-    "optimize-autoloader": true,
     "autoload": {
         "classmap": [
             "api.php"
