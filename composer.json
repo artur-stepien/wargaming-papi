@@ -1,0 +1,27 @@
+{
+    "name": "artur-stepien/wargaming-papi",
+    "description": "Provides a useful interface to connect and use Wargaming Public API",
+    "keywords": ["wargaming", "wg", "wot","world of tanks"],
+    "homepage": "https://github.com/artur-stepien/wargaming-papi",
+    "type": "library",
+    "license": "GNU 3.0",
+    "authors": [
+        {
+            "name": "Jordi Boggiano",
+            "email": "j.boggiano@seld.be",
+            "homepage": "http://seld.be"
+        }
+    ],
+    "require-dev": {},
+    "require": {
+        "php": ">=7.0.0"
+    },
+    "optimize-autoloader": true,
+    "autoload": {
+        "classmap": [
+            "api.php"
+        ]
+    },
+    "scripts": {},
+    "scripts-descriptions": {}
+}
