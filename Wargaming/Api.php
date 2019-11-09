@@ -10,46 +10,32 @@
 namespace Wargaming;
 
 // Supported language codes (used mostly in Tankpedia queries)
-CONST LANGUAGE_ENGLISH    = 'en';
-CONST LANGUAGE_POLISH     = 'pl';
-CONST LANGUAGE_RUSSIAN    = 'ru';
-CONST LANGUAGE_DEUTSCH    = 'de';
-CONST LANGUAGE_FRENCH     = 'fr';
-CONST LANGUAGE_SPANISH    = 'es';
-CONST LANGUAGE_CHINESE    = 'zh-cn';
-CONST LANGUAGE_TURKISH    = 'tr';
-CONST LANGUAGE_CZECH      = 'cs';
-CONST LANGUAGE_THAI       = 'th';
-CONST LANGUAGE_VIETNAMESE = 'vi';
-// Supported servers
-CONST SERVER_EU           = 'api.worldoftanks.eu';
-CONST SERVER_NA           = 'api.worldoftanks.com';
-CONST SERVER_RU           = 'api.worldoftanks.ru';
-CONST SERVER_ASIA         = 'api.worldoftanks.asia';
-CONST SERVER_KR           = 'api.worldoftanks.kr';
+use Exception;
+use Wargaming\Server\LanguagePrototype;
+use Wargaming\Server\ServerPrototype;
 
 /**
  * Class takes care of accessing and processing Wargaming API requests.
  */
-class API
+class Api
 {
     /**
      * Application ID from Wargaming Developer Room
-     * @var   Integer 
+     * @var   Integer
      */
     protected $application_id;
 
     /**
      * Language for data retrieved from Wargaming servers (language code).
      *
-     * @var   String
+     * @var   LanguagePrototype\
      */
     protected $language;
 
     /**
-     * API server URL. This one depends on server you use. 
-     * 
-     * @var   String
+     * API server URL. This one depends on server you use.
+     *
+     * @var   ServerPrototype
      */
     protected $server;
 
@@ -62,39 +48,38 @@ class API
 
     /**
      * Create Wargaming API instance
-     * 
-     * @param   string   $application_id   Application ID obtainable from Wargaming websites
-     * @param   string   $language         Language of data (mostly errors). Default: LANGUAGE_ENGLISH
-     * @param   string   $server           Server/Cluster that should be used as source. DefaultL SERVER_EU
+     *
+     * @param string $application_id Application ID obtainable from Wargaming websites
+     * @param LanguagePrototype $language Language of data (mostly errors). Default: LANGUAGE_ENGLISH
+     * @param ServerPrototype $server Server/Cluster that should be used as source. DefaultL SERVER_EU
      */
-    public function __construct(string $application_id,
-                                string $language = LANGUAGE_ENGLISH,
-                                string $server = SERVER_EU)
+    public function __construct(string $application_id, LanguagePrototype $language, ServerPrototype $server)
     {
-
         $this->application_id = $application_id;
-        $this->language       = $language;
-        $this->server         = $server;
+        $this->language = $language;
+        $this->server = $server;
     }
 
     /**
      * Return data from Wargaming servers. Documentation for all API methods can be found here: https://eu.wargaming.net/developers/api_reference
-     * 
-     * @param   string   $namespace   Namespace of data you want to get(for example wgn/servers/info or wot/account/list )
-     * @param   array    $options     All the options required for this field to work except application_id and language (for example array('fields'=>'server','game'=>'wot'))
-     * @param   boolean  $assoc       If set to true function will return associative array instead of object/array of objects.
-     * @param	string   $ETag        ETag string to validate data (without quotation marks). If in response server will return HTTP 304 Not Modified status method will return boolean TRUE. That means that data did not changed. Documentation: https://eu.wargaming.net/developers/documentation/guide/getting-started/#etag
-     * @param	boolean  $HTTPHeaders If this parameter is set to TRUE, method will return also HTTP headers sent with response in format: array('headers'=>array(), 'data'=>array()).
-     * 
+     *
+     * @param string $namespace Namespace of data you want to get(for example wgn/servers/info or wot/account/list )
+     * @param array $options All the options required for this field to work except application_id and language (for example array('fields'=>'server','game'=>'wot'))
+     * @param boolean $assoc If set to true function will return associative array instead of object/array of objects.
+     * @param string $ETag ETag string to validate data (without quotation marks). If in response server will return HTTP 304 Not Modified status method will return boolean TRUE. That means that data did not changed. Documentation: https://eu.wargaming.net/developers/documentation/guide/getting-started/#etag
+     * @param boolean $HTTPHeaders If this parameter is set to TRUE, method will return also HTTP headers sent with response in format: array('headers'=>array(), 'data'=>array()).
+     *
      * @return  mixed
+     *
+     * @throws Exception
      */
     public function get(string $namespace, array $options = [],
                         bool $assoc = false, string $ETag = null,
-                        bool$HTTPHeaders = false)
+                        bool $HTTPHeaders = false)
     {
 
         // Build query url
-        $url = 'https://'.$this->server.'/'.$namespace.'/?application_id='.$this->application_id.'&language='.$this->language.'&'.http_build_query($options);
+        $url = 'https://' . $this->server . '/' . $namespace . '/?application_id=' . $this->application_id . '&language=' . $this->language . '&' . http_build_query($options);
 
         // Get response
         $buff = $this->getUrlContents($url, $ETag, $HTTPHeaders);
@@ -148,7 +133,7 @@ class API
                 } else {
 
                     throw new \Exception('You set wrong server or namespace.',
-                    404);
+                        404);
                 }
 
                 // User chose array format
@@ -179,7 +164,7 @@ class API
                 } else {
 
                     throw new \Exception('You set wrong server or namespace.',
-                    404);
+                        404);
                 }
 
                 // Unsupported response format
@@ -195,11 +180,13 @@ class API
     /**
      * Returns data from url provided in $url. This function use same curl handle for each request
      *
-     * @param   String   $url   Data url to process
-     * @param   String   $ETag  ETag HTTP header value (without quotation marks) to be used for request.
-     * @param	boolean  $HTTPHeaders If this parameter is set to TRUE, method will return also HTTP headers sent with response in format: array('headers'=>array(), 'data'=>'').
+     * @param String $url Data url to process
+     * @param String $ETag ETag HTTP header value (without quotation marks) to be used for request.
+     * @param boolean $HTTPHeaders If this parameter is set to TRUE, method will return also HTTP headers sent with response in format: array('headers'=>array(), 'data'=>'').
      *
      * @return   mixed   Array if success, FALSE on failure, TRUE if data did not changed (only when ETag is used).
+     *
+     * @throws Exception
      */
     protected function getUrlContents(string $url, string $ETag = null,
                                       bool $HTTPHeaders = false)
@@ -223,8 +210,8 @@ class API
         if (!is_null($ETag)) {
             curl_setopt($this->connection, CURLOPT_HTTPHEADER,
                 [
-                'If-None-Match: "'.$ETag.'"',
-            ]);
+                    'If-None-Match: "' . $ETag . '"',
+                ]);
         }
 
         // Set connection URL
@@ -237,7 +224,7 @@ class API
         $error = curl_error($this->connection);
 
         if ($error !== '') {
-            throw new \Exception('(Curl) '.$error, curl_errno($this->connection));
+            throw new \Exception('(Curl) ' . $error, curl_errno($this->connection));
         }
 
         // Prepare headers
@@ -263,7 +250,7 @@ class API
             $headers = $tmp;
         } else {
             $headers = [];
-            $body    = $buffer;
+            $body = $buffer;
         }
 
         // Get response status code
@@ -280,8 +267,8 @@ class API
     /**
      * Returns human readable error message.
      *
-     * @param   string   $error       The error to translate.
-     * @param   string   $namespace   Namespace passed into get() function.
+     * @param string $error The error to translate.
+     * @param string $namespace Namespace passed into get() function.
      *
      * @return string
      */
@@ -292,7 +279,7 @@ class API
             'SEARCH_NOT_SPECIFIED' => 'Parameter <b>search</b> not specified.',
             'NOT_ENOUGH_SEARCH_LENGTH' => '<b>Search</b> parameter is not long enough. Minimum length: 3 characters.',
             'ACCOUNT_ID_LIST_LIMIT_EXCEEDED' => 'Limit of passed-in <b>account_id</b> IDs exceeded. Maximum: 100.',
-            'METHOD_NOT_FOUND' => 'Invalid API method <b>'.$namespace.'</b>.',
+            'METHOD_NOT_FOUND' => 'Invalid API method <b>' . $namespace . '</b>.',
             'METHOD_DISABLED' => 'Specified method is disabled.',
             'APPLICATION_IS_BLOCKED' => 'Application is blocked by the administration.',
             'INVALID_APPLICATION_ID' => 'Invalid <b>application_id</b>.',
@@ -320,17 +307,17 @@ class API
         if (isset($messages[$error])) {
             return $messages[$error];
         } elseif (stripos($error, '_NOT_SPECIFIED')) {
-            return 'Required field <b>'.strtolower(str_ireplace('_NOT_SPECIFIED',
-                        '', $error)).'</b> is not specified.';
+            return 'Required field <b>' . strtolower(str_ireplace('_NOT_SPECIFIED',
+                    '', $error)) . '</b> is not specified.';
         } elseif (stripos($error, '_NOT_FOUND')) {
-            return 'Data for <b>'.strtolower(str_ireplace('_NOT_FOUND', '',
-                        $error)).'</b> not found.';
+            return 'Data for <b>' . strtolower(str_ireplace('_NOT_FOUND', '',
+                    $error)) . '</b> not found.';
         } elseif (stripos($error, '_LIST_LIMIT_EXCEEDED')) {
-            return 'Limit of passed-in identifiers in the <b>'.strtolower(str_ireplace('_LIST_LIMIT_EXCEEDED',
-                        '', $error)).'</b> exceeded.';
+            return 'Limit of passed-in identifiers in the <b>' . strtolower(str_ireplace('_LIST_LIMIT_EXCEEDED',
+                    '', $error)) . '</b> exceeded.';
         } elseif (stripos($error, 'INVALID_')) {
-            return 'Specified field value <b>'.strtolower(str_ireplace('INVALID_',
-                        '', $error)).'</b> is not valid.';
+            return 'Specified field value <b>' . strtolower(str_ireplace('INVALID_',
+                    '', $error)) . '</b> is not valid.';
         } else {
             return $error;
         }

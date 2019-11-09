@@ -19,7 +19,13 @@
     "autoload": {
         "classmap": [
             "api.php"
-        ]
+        ],
+        "psr-4": {
+            "Wargaming\\": "Wargaming/"
+        }
+    },
+    "conflict": {
+        "artur-stepien/wargaming-papi": "<1.4"
     },
     "extra": {
         "branch-alias": {
