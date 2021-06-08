@@ -9,15 +9,15 @@ Basic PHP library handling Wargaming Public API. Uses namespace to get data sour
 ``` php
 <?php
 
-use Wargaming\Language\EN as English;
-use Wargaming\Server\EU as European;
+use Wargaming\Language\EN as EnglishLanguage;
+use Wargaming\Server\EU as EuropeanServer;
 
 require_once 'vendor/autoload.php';
 
-// API Instance where demo is your application_id
-$lang = new English();
-$server = new European();
-$api = new Wargaming\API('YOUR_APP_KEY, $lang, $server);
+// API Instance where YOUR_APPLICATION_ID is your application_id registered for the server you use.
+$lang = new EnglishLanguage();
+$server = new EuropeanServer('YOUR_APPLICATION_ID');
+$api = new Wargaming\API($lang, $server);
 
 // Test how it works
 try {
@@ -37,15 +37,15 @@ try {
 ``` php
 <?php
 
-use Wargaming\Language\EN as English;
-use Wargaming\Server\EU as European;
+use Wargaming\Language\EN as EnglishLanguage;
+use Wargaming\Server\EU as EuropeanServer;
 
 require_once 'vendor/autoload.php';
 
-// API Instance where demo is your application_id
-$lang = new English();
-$server = new European();
-$api = new Wargaming\API('YOUR_APP_KEY, $lang, $server);
+// API Instance where YOUR_APPLICATION_ID is your application_id registered for the server you use.
+$lang = new EnglishLanguage();
+$server = new EuropeanServer('YOUR_APPLICATION_ID');
+$api = new Wargaming\API($lang, $server);
 
 // Test how it works
 try {
@@ -65,15 +65,15 @@ try {
 ``` php
 <?php
 
-use Wargaming\Language\EN as English;
-use Wargaming\Server\EU as European;
+use Wargaming\Language\EN as EnglishLanguage;
+use Wargaming\Server\EU as EuropeanServer;
 
 require_once 'vendor/autoload.php';
 
-// API Instance where demo is your application_id
-$lang = new English();
-$server = new European();
-$api = new Wargaming\API('YOUR_APP_KEY, $lang, $server);
+// API Instance where YOUR_APPLICATION_ID is your application_id registered for the server you use.
+$lang = new EnglishLanguage();
+$server = new EuropeanServer('YOUR_APPLICATION_ID');
+$api = new Wargaming\API($lang, $server);
 
 // Test how it works
 try {
@@ -92,8 +92,10 @@ try {
 
 ## News
 ### 1.4.0 -
-- Prepared for use as dependency injection.
+- Prepared for use in dependency injection.
 - Added a `public function setSSLVerification(bool $state)` method to change SSL connection verification status (CURLOPT_SSL_VERIFYPEER).
+- Changed api instance declaration to allow multiple servers
+- Added server instance declaration to allow injected application id (api key)
 
 ### 1.3.1 - 2018-02-26
 Creating composer package.

@@ -18,11 +18,6 @@ use Wargaming\Server\ServerPrototype;
  */
 class Api
 {
-    /**
-     * Application ID from Wargaming Developer Room
-     * @var   Integer
-     */
-    protected $application_id;
 
     /**
      * Language for data retrieved from Wargaming servers (language code).
@@ -55,15 +50,13 @@ class Api
     /**
      * Create Wargaming API instance
      *
-     * @param   string             $application_id  Application ID obtainable from Wargaming websites
-     * @param   LanguagePrototype  $language        Language of data (mostly errors).
-     * @param   ServerPrototype    $server          Server/Cluster that should be used as source.
+     * @param   LanguagePrototype|null  $language  Language of data (mostly errors).
+     * @param   ServerPrototype|null    $server    Server/Cluster that should be used as source.
      */
-    public function __construct(string $application_id, LanguagePrototype $language, ServerPrototype $server)
+    public function __construct($language = null, $server = null)
     {
-        $this->application_id = $application_id;
-        $this->language       = $language;
-        $this->server         = $server;
+        $this->language = $language;
+        $this->server   = $server;
     }
 
     /**
@@ -88,7 +81,7 @@ class Api
     ) {
 
         // Build query url
-        $url = 'https://' . $this->server . '/' . $namespace . '/?application_id=' . $this->application_id . '&language=' . $this->language . '&' . http_build_query($options);
+        $url = 'https://' . $this->server . '/' . $namespace . '/?application_id=' . $this->server->getApplicationId() . '&language=' . $this->language . '&' . http_build_query($options);
 
         // Get response
         $buff = $this->getUrlContents($url, $ETag, $HTTPHeaders);
@@ -102,7 +95,7 @@ class Api
         } else {
             if ($buff['data'] === true) {
 
-                // If HTTPHeaders parameter is set, return assocative array containing data and headers
+                // If HTTPHeaders parameter is set, return associative array containing data and headers
                 if ($HTTPHeaders) {
                     return $buff;
                 }
@@ -122,7 +115,7 @@ class Api
                     // Servers return correct data
                     if ($response->status === 'ok') {
 
-                        // If HTTPHeaders parameter is set, return assocative array containing also headers
+                        // If HTTPHeaders parameter is set, return associative array containing also headers
                         if ($HTTPHeaders) {
                             return ['data' => $response->data, 'headers' => $buff['headers']];
 
@@ -351,5 +344,25 @@ class Api
     public function setSSLVerification(bool $state)
     {
         $this->ssl_verification = $state;
+    }
+
+    /**
+     * Set server that should be used in queries.
+     *
+     * @param   ServerPrototype  $server  Server instance.
+     */
+    public function setServer(ServerPrototype $server)
+    {
+        $this->server = $server;
+    }
+
+    /**
+     * Set language that should be used in queries.
+     *
+     * @param   LanguagePrototype  $language  Queries language.
+     */
+    public function setLanguage(LanguagePrototype $language)
+    {
+        $this->language = $language;
     }
 }
