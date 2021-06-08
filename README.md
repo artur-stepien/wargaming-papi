@@ -9,11 +9,15 @@ Basic PHP library handling Wargaming Public API. Uses namespace to get data sour
 ``` php
 <?php
 
-// Include API
-require_once __DIR__.'vendor/__autoload.php';
+use Wargaming\Language\EN as English;
+use Wargaming\Server\EU as European;
+
+require_once 'vendor/autoload.php';
 
 // API Instance where demo is your application_id
-$api = new Wargaming\API('demo');
+$lang = new English();
+$server = new European();
+$api = new Wargaming\API('YOUR_APP_KEY, $lang, $server);
 
 // Test how it works
 try {
@@ -33,11 +37,15 @@ try {
 ``` php
 <?php
 
-// Include API
-require_once __DIR__.'vendor/__autoload.php';
+use Wargaming\Language\EN as English;
+use Wargaming\Server\EU as European;
+
+require_once 'vendor/autoload.php';
 
 // API Instance where demo is your application_id
-$api = new Wargaming\API('demo');
+$lang = new English();
+$server = new European();
+$api = new Wargaming\API('YOUR_APP_KEY, $lang, $server);
 
 // Test how it works
 try {
@@ -57,11 +65,15 @@ try {
 ``` php
 <?php
 
-// Include API
-require_once __DIR__.'vendor/__autoload.php';
+use Wargaming\Language\EN as English;
+use Wargaming\Server\EU as European;
+
+require_once 'vendor/autoload.php';
 
 // API Instance where demo is your application_id
-$api = new Wargaming\API('demo');
+$lang = new English();
+$server = new European();
+$api = new Wargaming\API('YOUR_APP_KEY, $lang, $server);
 
 // Test how it works
 try {

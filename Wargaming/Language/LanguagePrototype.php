@@ -18,7 +18,7 @@ abstract class LanguagePrototype
      *
      * @throws Exception
      */
-    public function __toString()
+    public function __toString(): string
     {
         return strtolower((new \ReflectionClass($this))->getShortName());
     }

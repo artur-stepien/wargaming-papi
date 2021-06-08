@@ -12,13 +12,18 @@ abstract class ServerPrototype
 {
 
     /**
+     * Api Server URL
+     */
+    const URL = '';
+
+    /**
      * ServerPrototype constructor.
      *
      * @throws Exception
      */
     public function __construct()
     {
-        if( !define($this::URL) ) {
+        if( !is_string($this::URL) || $this::URL==='' ) {
             throw new Exception('Server object is missing URL constant.');
         }
     }
@@ -38,7 +43,7 @@ abstract class ServerPrototype
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this::URL;
     }
