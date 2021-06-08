@@ -91,7 +91,7 @@ try {
 ```
 
 ## News
-### 1.4.0 -
+### 1.4.0 - 2021-06-08
 - Prepared for use in dependency injection.
 - Added a `public function setSSLVerification(bool $state)` method to change SSL connection verification status (CURLOPT_SSL_VERIFYPEER).
 - Changed api instance declaration to allow multiple servers
