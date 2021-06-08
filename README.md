@@ -1,8 +1,8 @@
-# Wargaming Public API 1.3
+# Wargaming Public API 1.4
 Basic PHP library handling Wargaming Public API. Uses namespace to get data sources so it is compatible with all sources (WoT, Blitz, WGN, WoWp and also WoWs) and all servers (EU,NA,ASIA,RU,KR). All it needs is application_id that can be obtained here https://eu.wargaming.net/developers/applications/ (for EU).
 
 ## Requirements
-- PHP 7
+- PHP 7.0+
 - CURL
 
 ## Sample usage
@@ -10,7 +10,7 @@ Basic PHP library handling Wargaming Public API. Uses namespace to get data sour
 <?php
 
 // Include API
-require_once 'api.php';
+require_once __DIR__.'vendor/__autoload.php';
 
 // API Instance where demo is your application_id
 $api = new Wargaming\API('demo');
@@ -34,7 +34,7 @@ try {
 <?php
 
 // Include API
-require_once 'api.php';
+require_once __DIR__.'vendor/__autoload.php';
 
 // API Instance where demo is your application_id
 $api = new Wargaming\API('demo');
@@ -58,7 +58,7 @@ try {
 <?php
 
 // Include API
-require_once 'api.php';
+require_once __DIR__.'vendor/__autoload.php';
 
 // API Instance where demo is your application_id
 $api = new Wargaming\API('demo');
@@ -79,6 +79,10 @@ try {
 ```
 
 ## News
+### 1.4.0 -
+- Prepared for use as dependency injection.
+- Added a `public function setSSLVerification(bool $state)` method to change SSL connection verification status (CURLOPT_SSL_VERIFYPEER).
+
 ### 1.3.1 - 2018-02-26
 Creating composer package.
 

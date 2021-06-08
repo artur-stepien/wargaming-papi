@@ -14,23 +14,17 @@
     ],
     "require-dev": {},
     "require": {
-        "php": ">=7.0.0"
+        "php": ">=7.0.0",
+        "ext-json": "*",
+        "ext-curl": "*"
     },
     "autoload": {
-        "classmap": [
-            "api.php"
-        ],
         "psr-4": {
             "Wargaming\\": "Wargaming/"
         }
     },
     "conflict": {
         "artur-stepien/wargaming-papi": "<1.4"
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "master-dev"
-        }
     },
     "scripts": {},
     "scripts-descriptions": {}
