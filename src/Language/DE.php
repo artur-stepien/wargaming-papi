@@ -2,13 +2,11 @@
 
 namespace Wargaming\Language;
 
-use Exception;
-
 /**
- * Class ZHCN
+ * Class DE
  * @package Wargaming\Language
  */
-final class ZHCN extends LanguagePrototype
+final class DE extends LanguagePrototype
 {
 
 }

@@ -10,8 +10,8 @@
 namespace Wargaming;
 
 use Exception;
-use Wargaming\Language\LanguagePrototype;
 use Wargaming\Server\ServerPrototype;
+use Wargaming\Language\LanguagePrototype;
 
 /**
  * Class takes care of accessing and processing Wargaming API requests.

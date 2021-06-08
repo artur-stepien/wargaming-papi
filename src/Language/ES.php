@@ -2,8 +2,6 @@
 
 namespace Wargaming\Language;
 
-use Exception;
-
 /**
  * Class ES
  * @package Wargaming\Language

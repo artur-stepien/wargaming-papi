@@ -2,13 +2,11 @@
 
 namespace Wargaming\Language;
 
-use Exception;
-
 /**
- * Class RU
+ * Class TR
  * @package Wargaming\Language
  */
-final class RU extends LanguagePrototype
+final class TR extends LanguagePrototype
 {
 
 }

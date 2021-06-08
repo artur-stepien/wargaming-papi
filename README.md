@@ -21,7 +21,7 @@ $api = new Wargaming\API($lang, $server);
 
 // Test how it works
 try {
-	$data = $api->get('wgn/clans/list', ['search'=>'PSQD']);
+	$data = $api->get('wgn/clans/list', ['search'=>'PSQD','fields'=>'name,tag,clan_id']);
 	
 	// Display info about WoT Clan PSQD
 	var_dump($data);
