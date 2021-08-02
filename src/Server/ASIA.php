@@ -3,7 +3,7 @@
 namespace Wargaming\Server;
 
 /**
- * Class RU
+ * Class ASIA
  * @package Wargaming\Server
  */
 final class ASIA extends ServerPrototype
@@ -11,5 +11,5 @@ final class ASIA extends ServerPrototype
     /**
      * Api Server URL
      */
-    const URL = 'api.worldoftanks.asia';
+    protected $URL = 'api.worldoftanks.asia';
 }

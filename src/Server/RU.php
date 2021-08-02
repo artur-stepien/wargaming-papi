@@ -11,5 +11,5 @@ final class RU extends ServerPrototype
     /**
      * Api Server URL
      */
-    const URL = 'api.worldoftanks.ru';
+    protected $URL = 'api.worldoftanks.ru';
 }
