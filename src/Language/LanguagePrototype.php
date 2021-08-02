@@ -10,7 +10,21 @@ use Exception;
  */
 abstract class LanguagePrototype
 {
+    /**
+     * Language for the API
+     * @var string
+     */
+    private $lang;
 
+    /**
+     * LanguagePrototype constructor.
+     * @param string $lang Lang of Api
+     */
+    public function __construct(string $lang = '')
+    {
+
+        $this->lang = ($lang!== '')?$lang:strtolower((new \ReflectionClass($this))->getShortName());
+    }
     /**
      * Convert server to url string.
      *
@@ -20,7 +34,7 @@ abstract class LanguagePrototype
      */
     public function __toString(): string
     {
-        return strtolower((new \ReflectionClass($this))->getShortName());
+        return $this->lang;
     }
 
 }
