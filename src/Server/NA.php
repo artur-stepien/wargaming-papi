@@ -11,5 +11,5 @@ final class NA extends ServerPrototype
     /**
      * Api Server URL
      */
-    const URL = 'api.worldoftanks.com';
+    protected $URL = 'api.worldoftanks.com';
 }

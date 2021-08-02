@@ -13,8 +13,10 @@ abstract class ServerPrototype
 
     /**
      * Api Server URL
+     *
+     * @var string
      */
-    const URL = '';
+    protected $URL = '';
 
     /**
      * Api key (application id)
@@ -27,18 +29,24 @@ abstract class ServerPrototype
      * ServerPrototype constructor.
      *
      * @param   string  $application_id  Application ID registered in this server.
+     * @param   string  $url  API-Server URL, can be defined by using explicit classes
      *
      * @throws Exception
      */
-    public function __construct(string $application_id = '')
+    public function __construct(string $application_id = '', string $url = '')
     {
+
+        //set new url if provided
+        if($url !== ''){
+            $this->URL = $url;
+        }
 
         // If there was an api key provided, use it.
         if ($application_id !== '') {
             $this->application_id = $application_id;
         }
 
-        if (!is_string($this::URL) || $this::URL === '') {
+        if (!is_string($this->URL) || $this->URL === '') {
             throw new Exception('Server object is missing URL constant.');
         }
     }
@@ -66,7 +74,7 @@ abstract class ServerPrototype
      */
     public function __toString(): string
     {
-        return $this::URL;
+        return $this->URL;
     }
 
     /**
