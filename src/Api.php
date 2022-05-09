@@ -53,7 +53,7 @@ class Api
      * @param   LanguagePrototype|null  $language  Language of data (mostly errors).
      * @param   ServerPrototype|null    $server    Server/Cluster that should be used as source.
      */
-    public function __construct($language = null, $server = null)
+    public function __construct(LanguagePrototype $language = null, ServerPrototype $server = null)
     {
         $this->language = $language;
         $this->server   = $server;
@@ -65,7 +65,7 @@ class Api
      * @param   string   $namespace    Namespace of data you want to get(for example wgn/servers/info or wot/account/list )
      * @param   array    $options      All the options required for this field to work except application_id and language (for example array('fields'=>'server','game'=>'wot'))
      * @param   boolean  $assoc        If set to true function will return associative array instead of object/array of objects.
-     * @param   string   $ETag         ETag string to validate data (without quotation marks). If in response server will return HTTP 304 Not Modified status method will return boolean TRUE. That means that data did not changed. Documentation: https://eu.wargaming.net/developers/documentation/guide/getting-started/#etag
+     * @param   string   $ETag         ETag string to validate data (without quotation marks). If in response server returns HTTP 304 Not Modified status method will return boolean TRUE. That means that data did not changed. Documentation: https://eu.wargaming.net/developers/documentation/guide/getting-started/#etag
      * @param   boolean  $HTTPHeaders  If this parameter is set to TRUE, method will return also HTTP headers sent with response in format: array('headers'=>array(), 'data'=>array()).
      *
      * @return  mixed
@@ -89,95 +89,89 @@ class Api
         // Wrong response (probably wrong server URL)
         if ($buff['data'] === false) {
 
-            throw new \Exception('Wrong server or namespace.', 404);
+            throw new \RuntimeException('Wrong server or namespace.', 404);
 
-            // Data did not changed on server
-        } else {
-            if ($buff['data'] === true) {
+        }
 
-                // If HTTPHeaders parameter is set, return associative array containing data and headers
+        // Data did not change on server
+        if ($buff['data'] === true) {
+
+            // If HTTPHeaders parameter is set, return associative array containing data and headers
+            if ($HTTPHeaders) {
+                return $buff;
+            }
+
+            // Return plain data
+            return $buff['data'];
+
+        }
+
+        // New data available
+        // Convert response to object or array depending on $assoc param
+        $response = json_decode($buff['data'], $assoc);
+
+        // User chose object format
+        if (is_object($response)) {
+
+            // Servers return correct data
+            if ($response->status === 'ok') {
+
+                // If HTTPHeaders parameter is set, return associative array containing also headers
                 if ($HTTPHeaders) {
-                    return $buff;
+                    return ['data' => $response->data, 'headers' => $buff['headers']];
                 }
 
                 // Return plain data
-                return $buff['data'];
+                return $response->data;
 
-                // New data available
-            } else {
-
-                // Convert response to object or array depending on $assoc param
-                $response = json_decode($buff['data'], $assoc);
-
-                // User chose object format
-                if (is_object($response)) {
-
-                    // Servers return correct data
-                    if ($response->status === 'ok') {
-
-                        // If HTTPHeaders parameter is set, return associative array containing also headers
-                        if ($HTTPHeaders) {
-                            return ['data' => $response->data, 'headers' => $buff['headers']];
-
-                            // Return plain data
-                        } else {
-                            return $response->data;
-                        }
-
-                        // Api server return error
-                    } elseif ($response->status === 'error') {
-
-                        // Create exception
-                        throw new \Exception($this->translateError($response->error->message,
-                            $namespace), $response->error->code);
-
-                        // Page not found
-                    } else {
-
-                        throw new \Exception('You set wrong server or namespace.',
-                            404);
-                    }
-
-                    // User chose array format
-                } elseif (is_array($response)) {
-
-                    // Servers return correct data
-                    if ($response['status'] === 'ok') {
-
-                        // If HTTPHeaders parameter is set, return assocative array containing also headers
-                        if ($HTTPHeaders) {
-
-                            return ['data' => $response['data'], 'headers' => $buff['headers']];
-
-                            // Return plain data
-                        } else {
-
-                            return $response['data'];
-                        }
-
-                        // Api server return error
-                    } elseif ($response['status'] === 'error') {
-
-                        // Create exception
-                        throw new \Exception($this->translateError($response['error']['message'],
-                            $namespace), $response['error']['code']);
-
-                        // Page not found
-                    } else {
-
-                        throw new \Exception('You set wrong server or namespace.',
-                            404);
-                    }
-
-                    // Unsupported response format
-                } else {
-
-                    throw new \Exception('Wrong response format.', 502);
-                }
             }
+
+            // Api server return error
+            if ($response->status === 'error') {
+
+                // Create exception
+                throw new \RuntimeException($this->translateError($response->error->message,
+                    $namespace), $response->error->code);
+
+            }
+
+            // Page not found
+            throw new \RuntimeException('You set wrong server or namespace.', 404);
+
+            // User chose array format
         }
 
-        return false;
+        if (is_array($response)) {
+
+            // Servers return correct data
+            if ($response['status'] === 'ok') {
+
+                // If HTTPHeaders parameter is set, return assocative array containing also headers
+                if ($HTTPHeaders) {
+                    return ['data' => $response['data'], 'headers' => $buff['headers']];
+                }
+
+                // Return plain data
+                return $response['data'];
+
+                // Api server return error
+            }
+
+            if ($response['status'] === 'error') {
+
+                // Create exception
+                throw new \RuntimeException($this->translateError($response['error']['message'],
+                    $namespace), $response['error']['code']);
+
+            }
+
+            // Page not found
+            throw new \RuntimeException('You set wrong server or namespace.', 404);
+
+        }
+
+        // Unsupported response format
+        throw new \RuntimeException('Wrong response format.', 502);
     }
 
     /**
@@ -229,7 +223,7 @@ class Api
         $error = curl_error($this->connection);
 
         if ($error !== '') {
-            throw new \Exception('(Curl) ' . $error, curl_errno($this->connection));
+            throw new \RuntimeException('(Curl) ' . $error, curl_errno($this->connection));
         }
 
         // Prepare headers
@@ -272,12 +266,12 @@ class Api
     /**
      * Returns human readable error message.
      *
-     * @param   string  $error      The error to translate.
-     * @param   string  $namespace  Namespace passed into get() function.
+     * @param   string       $error      The error to translate.
+     * @param   string|null  $namespace  Namespace passed into get() function.
      *
      * @return string
      */
-    protected function translateError(string $error, $namespace = null): string
+    protected function translateError(string $error, string $namespace = null): string
     {
 
         $messages = [
@@ -340,29 +334,41 @@ class Api
      * Set CURL verification of connection safety (eg. certificates).
      *
      * @param   bool  $state
+     *
+     * @return Api
      */
-    public function setSSLVerification(bool $state)
+    public function setSSLVerification(bool $state): self
     {
         $this->ssl_verification = $state;
+
+        return $this;
     }
 
     /**
      * Set server that should be used in queries.
      *
      * @param   ServerPrototype  $server  Server instance.
+     *
+     * @return Api
      */
-    public function setServer(ServerPrototype $server)
+    public function setServer(ServerPrototype $server): self
     {
         $this->server = $server;
+
+        return $this;
     }
 
     /**
      * Set language that should be used in queries.
      *
      * @param   LanguagePrototype  $language  Queries language.
+     *
+     * @return Api
      */
-    public function setLanguage(LanguagePrototype $language)
+    public function setLanguage(LanguagePrototype $language): self
     {
         $this->language = $language;
+
+        return $this;
     }
 }
