@@ -9,7 +9,7 @@
         {
             "name": "Artur Stępień",
             "email": "artur.stepien@bestproject.pl",
-            "homepage": "http://www.bestproject.pl"
+            "homepage": "https://www.bestproject.pl"
         }
     ],
     "require-dev": {},
@@ -22,9 +22,6 @@
         "psr-4": {
             "Wargaming\\": "src/"
         }
-    },
-    "conflict": {
-        "artur-stepien/wargaming-papi": "<1.4"
     },
     "scripts": {},
     "scripts-descriptions": {}

@@ -12,7 +12,7 @@ Basic PHP library handling Wargaming Public API. Uses namespace to get data sour
 use Wargaming\Language\EN as EnglishLanguage;
 use Wargaming\Server\EU as EuropeanServer;
 
-require_once 'vendor/autoload.php';
+require_once __DIR__.'/vendor/autoload.php';
 
 // API Instance where YOUR_APPLICATION_ID is your application_id registered for the server you use.
 $lang = new EnglishLanguage();
@@ -40,7 +40,7 @@ try {
 use Wargaming\Language\EN as EnglishLanguage;
 use Wargaming\Server\EU as EuropeanServer;
 
-require_once 'vendor/autoload.php';
+require_once __DIR__.'/vendor/autoload.php';
 
 // API Instance where YOUR_APPLICATION_ID is your application_id registered for the server you use.
 $lang = new EnglishLanguage();
@@ -68,7 +68,7 @@ try {
 use Wargaming\Language\EN as EnglishLanguage;
 use Wargaming\Server\EU as EuropeanServer;
 
-require_once 'vendor/autoload.php';
+require_once __DIR__.'/vendor/autoload.php';
 
 // API Instance where YOUR_APPLICATION_ID is your application_id registered for the server you use.
 $lang = new EnglishLanguage();
@@ -91,6 +91,11 @@ try {
 ```
 
 ## News
+### 1.4.1 - 2022-05-09
+- Allow chaining in set methods.
+- Simplified some of the conditions.
+- Fixed few typos in documentation.
+
 ### 1.4.0 - 2021-06-08
 - Prepared for use in dependency injection.
 - Added a `public function setSSLVerification(bool $state)` method to change SSL connection verification status (CURLOPT_SSL_VERIFYPEER).

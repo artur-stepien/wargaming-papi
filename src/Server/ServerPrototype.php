@@ -39,7 +39,7 @@ abstract class ServerPrototype
         }
 
         if (!is_string($this::URL) || $this::URL === '') {
-            throw new Exception('Server object is missing URL constant.');
+            throw new \RuntimeException('Server object is missing URL constant.');
         }
     }
 
@@ -53,7 +53,7 @@ abstract class ServerPrototype
     {
 
         if (!is_string($this->application_id) || $this->application_id === '') {
-            throw new Exception('This server instance is missing application id ($application_id). Create your own class extending ServerPrototype or any of the existing servers and set the application id.');
+            throw new \RuntimeException('This server instance is missing application id ($application_id). Create your own class extending ServerPrototype or any of the existing servers and set the application id.');
         }
 
         return $this->getURL();
